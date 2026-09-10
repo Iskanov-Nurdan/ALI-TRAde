@@ -90,3 +90,32 @@ test('прокрутка страницы список закрывает', () =
   assert.equal(menu.hidden, true, 'список закрыт');
   assert.equal(doc.querySelector('.select__menu'), null, 'и убран из документа');
 });
+
+/**
+ * На телефоне список исчезал ещё и без прокрутки внутри него: при
+ * прокрутке страницы мобильный браузер сворачивает адресную строку,
+ * окно становится ниже и приходит resize — а по нему меню закрывалось.
+ */
+test('изменение только высоты окна список не закрывает', () => {
+  const doc = env.document;
+  const select = selectWithManyOptions(doc);
+  const { menu } = openMenuFor(select, doc);
+
+  globalThis.window.innerHeight = 620; // свернулась адресная строка
+  globalThis.window.dispatchEvent(new globalThis.Event('resize'));
+
+  assert.equal(menu.hidden, false, 'список остался открыт');
+  globalThis.window.innerHeight = 800;
+});
+
+test('поворот экрана список закрывает', () => {
+  const doc = env.document;
+  const select = selectWithManyOptions(doc);
+  const { menu } = openMenuFor(select, doc);
+
+  globalThis.window.innerWidth = 800; // сменилась ориентация
+  globalThis.window.dispatchEvent(new globalThis.Event('resize'));
+
+  assert.equal(menu.hidden, true, 'список закрыт: он больше не под кнопкой');
+  globalThis.window.innerWidth = 1280;
+});

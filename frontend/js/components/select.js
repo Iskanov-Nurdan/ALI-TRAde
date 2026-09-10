@@ -63,12 +63,20 @@ export function enhanceSelect(select) {
     close();
   };
 
+  // На телефоне адресная строка сворачивается при прокрутке, а клавиатура
+  // поджимает окно — оба события приходят как resize и закрывали список
+  // прямо под пальцем. Значимо только изменение ширины: поворот экрана.
+  let openWidth = 0;
+  const onResize = () => {
+    if (window.innerWidth !== openWidth) close();
+  };
+
   const close = () => {
     menu.hidden = true;
     menu.remove();
     button.setAttribute('aria-expanded', 'false');
     window.removeEventListener('scroll', onScroll, true);
-    window.removeEventListener('resize', close);
+    window.removeEventListener('resize', onResize);
   };
 
   /** Ставит меню под кнопку, а при нехватке места снизу — над ней. */
@@ -116,8 +124,9 @@ export function enhanceSelect(select) {
     button.setAttribute('aria-expanded', 'true');
     menu.querySelector('.select__option--active')?.scrollIntoView({ block: 'nearest' });
     // Страница прокрутилась — меню больше не под кнопкой, закрываем
+    openWidth = window.innerWidth;
     window.addEventListener('scroll', onScroll, true);
-    window.addEventListener('resize', close);
+    window.addEventListener('resize', onResize);
     openMenu = close;
   };
 
