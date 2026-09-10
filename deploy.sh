@@ -13,14 +13,17 @@ warn() { printf '\033[1;33m[!] %s\033[0m\n' "$*"; }
 die()  { printf '\033[1;31m[x] ОШИБКА: %s\033[0m\n' "$*" >&2; exit 1; }
 
 SEED=false
+FORCE_SSL=false
 for arg in "$@"; do
   case "$arg" in
     --seed) SEED=true ;;
+    --force-ssl) FORCE_SSL=true ;;
     -h|--help)
       cat <<'USAGE'
 Использование: ./deploy.sh [--seed]
 
-  --seed   после запуска наполнить базу демо-данными (manage.py seed_demo)
+  --seed        после запуска наполнить базу демо-данными (manage.py seed_demo)
+  --force-ssl   выпускать сертификат, не проверяя доступность домена
 
 Настройки берутся из .env (создаётся автоматически из .env.production.example).
 USAGE
@@ -98,7 +101,17 @@ if [ "$ENABLE_SSL" = "true" ] && [ ! -d "$CERT_DIR" ]; then
   TOKEN="deploy-check-$(date +%s)"
   mkdir -p certbot/www/.well-known/acme-challenge
   printf '%s' "$TOKEN" > "certbot/www/.well-known/acme-challenge/${TOKEN}"
-  if curl -fsS --max-time 15 "http://${DOMAIN}/.well-known/acme-challenge/${TOKEN}" 2>/dev/null | grep -q "$TOKEN"; then
+
+  # Адрес берётся у публичного DNS: локальный резолвер мог закешировать
+  # отрицательный ответ, пока A-записи ещё не было.
+  DOMAIN_IP="$(getent hosts "$DOMAIN" 2>/dev/null | awk '{print $1; exit}')"
+  if command -v dig >/dev/null 2>&1; then
+    DOMAIN_IP="$(dig @8.8.8.8 +short "$DOMAIN" A 2>/dev/null | grep -E '^[0-9.]+$' | head -1)"
+  fi
+  RESOLVE_OPT=()
+  [ -n "${DOMAIN_IP:-}" ] && RESOLVE_OPT=(--resolve "${DOMAIN}:80:${DOMAIN_IP}")
+
+  if [ "$FORCE_SSL" = true ]      || curl -fsS --max-time 15 "${RESOLVE_OPT[@]}"           "http://${DOMAIN}/.well-known/acme-challenge/${TOKEN}" 2>/dev/null | grep -q "$TOKEN"; then
     rm -f "certbot/www/.well-known/acme-challenge/${TOKEN}"
     log "Выпускаю сертификат Let's Encrypt для ${DOMAIN}"
     if compose --profile certbot run --rm certbot certonly \
@@ -115,6 +128,7 @@ if [ "$ENABLE_SSL" = "true" ] && [ ! -d "$CERT_DIR" ]; then
     rm -f "certbot/www/.well-known/acme-challenge/${TOKEN}"
     warn "Домен ${DOMAIN} не отвечает на порту 80 с этого сервера — сертификат не выпускается."
     warn "Проверьте A-запись DNS и что порт 80 открыт, затем запустите ./deploy.sh ещё раз."
+    warn "Если домен точно настроен (сервер может не видеть свой внешний IP): ./deploy.sh --force-ssl"
   fi
 fi
 

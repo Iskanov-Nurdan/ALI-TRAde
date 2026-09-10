@@ -1,0 +1,35 @@
+# Нормализация переводов строк: в репозитории всегда LF.
+* text=auto eol=lf
+
+# Файлы, которые исполняются в Linux-контейнерах, — только LF,
+# иначе на сервере получим "bad interpreter: /usr/bin/env bash^M".
+*.sh            text eol=lf
+Dockerfile      text eol=lf
+*.conf          text eol=lf
+*.template      text eol=lf
+*.yml           text eol=lf
+*.yaml          text eol=lf
+.env.example    text eol=lf
+
+# Windows-скрипты — наоборот, только CRLF.
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+*.ps1           text eol=crlf
+
+# Бинарники не трогать и не diff'ить.
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.ico           binary
+*.webp          binary
+*.pdf           binary
+*.woff          binary
+*.woff2         binary
+*.ttf           binary
+*.zip           binary
+*.gz            binary
+*.sqlite3       binary
+
+# Не засорять diff и не считать за исходники при подсчёте языков.
+package-lock.json  linguist-generated=true -diff

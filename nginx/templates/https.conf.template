@@ -17,6 +17,14 @@ server {
         access_log off;
     }
 
+    # Проверка живости отвечает и по HTTP: healthcheck и мониторинг
+    # не должны зависеть от TLS и редиректа.
+    location /health/ {
+        proxy_pass http://api_backend;
+        include /etc/nginx/proxy_params_custom.conf;
+        access_log off;
+    }
+
     location / {
         return 301 https://${DOMAIN}$request_uri;
     }

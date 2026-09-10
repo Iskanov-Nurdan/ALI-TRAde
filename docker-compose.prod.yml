@@ -75,7 +75,9 @@ services:
       api:
         condition: service_started
     healthcheck:
-      test: ["CMD-SHELL", "wget -q --spider --max-redirect=0 http://127.0.0.1/health/ || wget -q --spider --no-check-certificate https://127.0.0.1/health/"]
+      # busybox wget не знает --max-redirect, поэтому /health/ отдаётся по HTTP
+      # в обоих режимах — и редирект на HTTPS его не перехватывает.
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/health/"]
       interval: 30s
       timeout: 5s
       retries: 3
