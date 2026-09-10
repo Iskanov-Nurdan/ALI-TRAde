@@ -170,6 +170,14 @@ class DomNode {
   get firstChild() {
     return this.childNodes[0] || null;
   }
+  contains(node) {
+    let current = node;
+    while (current) {
+      if (current === this) return true;
+      current = current.parentNode;
+    }
+    return false;
+  }
   _insert(node, before = null) {
     if (node.parentNode) node.parentNode.removeChild(node, true);
     const index = before ? this.childNodes.indexOf(before) : this.childNodes.length;
@@ -686,6 +694,22 @@ export function installDom({ html = '', storage = {}, media = {} } = {}) {
   win.cancelAnimationFrame = (id) => clearTimeout(id);
   win.innerHeight = 800;
   win.innerWidth = 1280;
+  // Слушатели самого окна: select.js вешает сюда scroll и resize.
+  // Фаза перехвата не моделируется — обработчик просто получает событие,
+  // как получил бы в браузере, а разбор target остаётся на его совести.
+  const winListeners = new Map();
+  win.addEventListener = (type, handler) => {
+    if (!winListeners.has(type)) winListeners.set(type, []);
+    winListeners.get(type).push(handler);
+  };
+  win.removeEventListener = (type, handler) => {
+    const list = winListeners.get(type);
+    if (list) winListeners.set(type, list.filter((item) => item !== handler));
+  };
+  win.dispatchEvent = (event) => {
+    (winListeners.get(event.type) || []).slice().forEach((handler) => handler(event));
+    return true;
+  };
   win.confirm = () => true;
   win.matchMedia = (query) => {
     if (mediaLists.has(query)) return mediaLists.get(query);
