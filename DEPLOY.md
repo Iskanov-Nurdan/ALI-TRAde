@@ -66,6 +66,11 @@ docker compose -f docker-compose.prod.yml logs -f api
 # Перезапуск
 docker compose -f docker-compose.prod.yml restart
 
+# Применить правку конфига nginx — именно пересоздание, а не reload:
+# редакторы (и sed -i) заменяют файл целиком, а bind-mount привязан к inode,
+# поэтому старый контейнер продолжает видеть прежнюю версию.
+docker compose -f docker-compose.prod.yml up -d --force-recreate nginx
+
 # Остановка (данные в томах сохраняются)
 docker compose -f docker-compose.prod.yml down
 
