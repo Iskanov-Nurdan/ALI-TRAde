@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Расходы — ALI trade</title>
+    <title>Таблица — ALI trade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,8 +26,8 @@
           <div class="sidebar__section">Работа</div>
           <a class="sidebar__link" href="dashboard.html" data-icon="dashboard" data-icon-size="17"><span>Панель</span></a>
           <a class="sidebar__link" href="deliveries.html" data-icon="truck" data-icon-size="17"><span>Рейсы</span></a>
-          <a class="sidebar__link" href="sheet.html" data-icon="grid" data-icon-size="17"><span>Таблица</span></a>
-          <a class="sidebar__link" href="expenses.html" data-icon="receipt" data-icon-size="17" aria-current="page"><span>Расходы</span></a>
+          <a class="sidebar__link" href="sheet.html" data-icon="grid" data-icon-size="17" aria-current="page"><span>Таблица</span></a>
+          <a class="sidebar__link" href="expenses.html" data-icon="receipt" data-icon-size="17"><span>Расходы</span></a>
           <a class="sidebar__link" href="rates.html" data-icon="coins" data-icon-size="17"><span>Курсы валют</span></a>
           <div class="sidebar__admin">
             <div class="sidebar__section">Администрирование</div>
@@ -56,69 +56,38 @@
         <main class="app-main">
       <div class="page-header">
         <div>
-          <h1>Расходы</h1>
+          <h1>Таблица</h1>
+          <p class="page-header__meta" id="sheet-status"></p>
         </div>
-        <button class="btn" type="button" id="btn-export" hidden data-icon="download"><span>Выгрузить в Excel</span></button>
+        <div class="btn-group">
+          <a class="btn" href="deliveries.html"><span>Обычный вид</span></a>
+        </div>
       </div>
 
-      <section class="card filters" aria-labelledby="filters-title">
-        <h2 id="filters-title" class="card__title">Фильтры</h2>
-        <form id="filters-form">
-          <div class="form-grid form-grid--4">
-            <div class="field">
-              <label class="field__label" for="f-vehicle">Номер машины</label>
-              <input id="f-vehicle" name="vehicle_number" type="search" placeholder="1234" />
-            </div>
-            <div class="field">
-              <label class="field__label" for="f-date-from">Период с</label>
-              <input id="f-date-from" name="date_from" type="date" />
-            </div>
-            <div class="field">
-              <label class="field__label" for="f-date-to">по</label>
-              <input id="f-date-to" name="date_to" type="date" />
-            </div>
-            <div class="field">
-              <label class="field__label" for="f-type">Тип расхода</label>
-              <select id="f-type" name="expense_type"></select>
-            </div>
-            <div class="field">
-              <label class="field__label" for="f-payer">Плательщик</label>
-              <select id="f-payer" name="payer"></select>
-            </div>
-            <div class="field">
-              <label class="field__label" for="f-currency">Валюта</label>
-              <select id="f-currency" name="currency"></select>
-            </div>
-            <div class="field">
-              <label class="field__label" for="f-author">Добавил</label>
-              <select id="f-author" name="created_by"></select>
-            </div>
-            <div class="field filters__actions">
-              <div class="btn-group">
-                <button class="btn btn--primary" type="submit">Применить</button>
-                <button class="btn" type="reset" id="btn-reset">Сбросить</button>
-              </div>
-            </div>
+      <section class="card">
+        <div class="sheet-toolbar">
+          <div class="field field--inline">
+            <label class="field__label" for="sheet-state">Показать</label>
+            <select id="sheet-state">
+              <option value="">Все рейсы</option>
+              <option value="active">Активные</option>
+              <option value="in_transit">В пути</option>
+              <option value="overdue">Просроченные</option>
+              <option value="arrived">Прибывшие</option>
+            </select>
           </div>
-        </form>
-      </section>
-
-      <section class="card" aria-labelledby="list-title">
-        <div class="card__title">
-          <h2 id="list-title">Список расходов</h2>
-          <span id="totals" class="badge badge--warning"></span>
         </div>
-        <div id="expenses"></div>
-        <div class="pagination" id="pagination" hidden>
-          <button class="btn btn--sm" type="button" id="page-prev">Назад</button>
-          <span id="page-info"></span>
-          <button class="btn btn--sm" type="button" id="page-next">Вперёд</button>
+
+        <div id="sheet" role="grid" aria-label="Рейсы"></div>
+
+        <div class="sheet-footer">
+          <button class="btn" type="button" id="sheet-more" hidden>Показать ещё</button>
         </div>
       </section>
         </main>
       </div>
     </div>
 
-    <script type="module" src="js/pages/expenses.js"></script>
+    <script type="module" src="js/pages/sheet.js"></script>
   </body>
 </html>

@@ -27,6 +27,7 @@ const PATHS = {
   check: '<path d="M5 12.5 10 17 19 7"/>',
   alert: '<path d="M12 4.5 2.8 20h18.4L12 4.5Z"/><path d="M12 10v4"/><path d="M12 17h.01"/>',
   filter: '<path d="M3 5h18l-7 8v5l-4 2v-7L3 5Z"/>',
+  grid: '<rect x="3.5" y="4.5" width="17" height="15" rx="1.5"/><path d="M3.5 9.5h17"/><path d="M3.5 14.5h17"/><path d="M9.5 9.5v10"/><path d="M15 9.5v10"/>',
   edit: '<path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="M14.5 5.5 18.5 9.5"/>',
   ban: '<circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/>',
   coins: '<ellipse cx="9" cy="6.5" rx="5.5" ry="2.5"/><path d="M3.5 6.5v4c0 1.4 2.5 2.5 5.5 2.5s5.5-1.1 5.5-2.5v-4"/><path d="M3.5 10.5v4c0 1.4 2.5 2.5 5.5 2.5"/><ellipse cx="16" cy="15.5" rx="4.5" ry="2.2"/><path d="M11.5 15.5v3c0 1.2 2 2.2 4.5 2.2s4.5-1 4.5-2.2v-3"/>',
