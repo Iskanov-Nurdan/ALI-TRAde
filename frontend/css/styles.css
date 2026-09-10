@@ -2244,6 +2244,9 @@ th.cell-num {
   z-index: 200;
   max-height: 260px;
   overflow-y: auto;
+  /* Докрутив список до конца, колесо не должно продолжать прокручивать
+     страницу под ним: меню закрепляется у кнопки и закрылось бы. */
+  overscroll-behavior: contain;
   padding: 4px;
   background: var(--surface);
   border: 1px solid var(--hairline-strong);

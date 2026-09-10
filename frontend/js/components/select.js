@@ -52,11 +52,22 @@ export function enhanceSelect(select) {
     button.disabled = select.disabled || !select.options.length;
   };
 
+  // Прокрутка страницы уводит меню от кнопки, поэтому его закрываем. Но у
+  // самого меню есть своя полоса прокрутки, и её события тоже долетают сюда
+  // в фазе перехвата — список закрывался на первом движении колеса внутри него.
+  const onScroll = (event) => {
+    const target = event.target;
+    // Прокрутка внутри самого списка закрывать его не должна.
+    if (target === menu) return;
+    if (target?.nodeType === 1 && menu.contains(target)) return;
+    close();
+  };
+
   const close = () => {
     menu.hidden = true;
     menu.remove();
     button.setAttribute('aria-expanded', 'false');
-    window.removeEventListener('scroll', close, true);
+    window.removeEventListener('scroll', onScroll, true);
     window.removeEventListener('resize', close);
   };
 
@@ -105,7 +116,7 @@ export function enhanceSelect(select) {
     button.setAttribute('aria-expanded', 'true');
     menu.querySelector('.select__option--active')?.scrollIntoView({ block: 'nearest' });
     // Страница прокрутилась — меню больше не под кнопкой, закрываем
-    window.addEventListener('scroll', close, true);
+    window.addEventListener('scroll', onScroll, true);
     window.addEventListener('resize', close);
     openMenu = close;
   };
