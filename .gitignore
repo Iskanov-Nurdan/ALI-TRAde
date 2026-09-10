@@ -147,3 +147,6 @@ $RECYCLE.BIN/
 .claude/settings.local.json
 .aider*
 .cursorignore
+
+# Резервные копии базы
+backups/

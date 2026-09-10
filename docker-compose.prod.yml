@@ -65,6 +65,7 @@ services:
       # Шаблон выбирается переменной NGINX_CONF: http (до выпуска сертификата) или https
       - ./nginx/templates/${NGINX_CONF:-http}.conf.template:/etc/nginx/templates/default.conf.template:ro
       - ./nginx/app_locations.conf:/etc/nginx/app_locations.conf:ro
+      - ./nginx/admin_access.conf:/etc/nginx/admin_access.conf:ro
       - ./nginx/proxy_params_custom.conf:/etc/nginx/proxy_params_custom.conf:ro
       - ./nginx/99-reload-loop.sh:/docker-entrypoint.d/99-reload-loop.sh:ro
       - ./frontend:/usr/share/nginx/html:ro
