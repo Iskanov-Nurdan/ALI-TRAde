@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Превью вёрстки</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="app-sidebar"></aside>
+      <div class="app-body">
+        <header class="topbar" id="app-header"></header>
+        <main class="app-main">
+          <div class="page-header">
+            <div>
+              <h1>Панель</h1>
+            </div>
+            <div class="btn-group">
+              <a class="btn btn--primary btn--cta" href="#"><span>Новый рейс</span></a>
+              <a class="btn" href="#">Просроченные</a>
+            </div>
+          </div>
+
+          <div class="stats" id="stats"></div>
+
+          <section class="card">
+            <div class="card__title">
+              <h2>Машины в пути и просроченные</h2>
+              <a class="btn btn--sm" href="#">Все рейсы</a>
+            </div>
+            <div class="legend">
+              <span class="legend__item"><span class="legend__swatch legend__swatch--normal"></span> обычный</span>
+              <span class="legend__item"><span class="legend__swatch legend__swatch--orange"></span> есть расход</span>
+              <span class="legend__item"><span class="legend__swatch legend__swatch--red"></span> просрочен</span>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Машина</th>
+                    <th>Маршрут</th>
+                    <th>Отправлен</th>
+                    <th>Прибытие</th>
+                    <th>Статус</th>
+                    <th>Расходы</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="cell-strong">01KG777AAA</td>
+                    <td><span class="route">Бишкек <span class="route__arrow">→</span> Ош</span></td>
+                    <td class="cell-nowrap">08.09.2026 06:30</td>
+                    <td class="cell-nowrap">08.09.2026 18:00</td>
+                    <td><span class="badge badge--primary">В пути</span></td>
+                    <td class="cell-nowrap">—</td>
+                  </tr>
+                  <tr class="table-row--orange">
+                    <td class="cell-strong">01KG512BCD</td>
+                    <td><span class="route">Ош <span class="route__arrow">→</span> Джалал-Абад</span></td>
+                    <td class="cell-nowrap">08.09.2026 05:10</td>
+                    <td class="cell-nowrap">08.09.2026 12:40</td>
+                    <td><span class="badge badge--warning">Прибыл с опозданием (1 ч 12 мин)</span></td>
+                    <td class="cell-nowrap">130.00 USD</td>
+                  </tr>
+                  <tr class="table-row--red">
+                    <td class="cell-strong">01KG309XYZ</td>
+                    <td><span class="route">Каракол <span class="route__arrow">→</span> Бишкек</span></td>
+                    <td class="cell-nowrap">07.09.2026 22:00</td>
+                    <td class="cell-nowrap">08.09.2026 09:00</td>
+                    <td><span class="badge badge--danger">Просрочен на 4 ч</span></td>
+                    <td class="cell-nowrap">2 500.00 KGS</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__title"><h2>Форма и состояния</h2></div>
+            <div class="form-grid form-grid--3">
+              <div class="field">
+                <label class="field__label" for="p1">Номер машины</label>
+                <input id="p1" type="text" value="01KG777AAA" />
+              </div>
+              <div class="field">
+                <label class="field__label" for="p2">Точка назначения</label>
+                <select id="p2"><option>Ош</option><option>Бишкек</option></select>
+              </div>
+              <div class="field">
+                <label class="field__label" for="p3">Плановое прибытие</label>
+                <input id="p3" type="datetime-local" />
+              </div>
+            </div>
+            <div class="btn-group" style="margin-top: 18px">
+              <button class="btn btn--primary btn--cta-add" type="button"><span>Добавить рейс</span></button>
+              <button class="btn" type="button">Отмена</button>
+              <button class="btn btn--danger" type="button">Удалить</button>
+              <button class="btn btn--success" type="button">Прибыл</button>
+            </div>
+            <div class="total-row"><span>Итого расходов</span><span>130.00 USD + 2 500.00 KGS</span></div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script type="module">
+      import { el } from './js/ui.js';
+      import { icon, hydrateIcons } from './js/icons.js';
+      import { revealIn } from './js/motion.js';
+
+      const NAV = [
+        ['Работа', [['Панель', 'dashboard', true], ['Рейсы', 'truck'], ['Расходы', 'receipt']]],
+        ['Администрирование', [['Отчёты', 'chart'], ['Точки', 'pin'], ['Сотрудники', 'users'], ['Справочники', 'sliders'], ['Журнал действий', 'history']]],
+      ];
+
+      const nav = el('nav', { class: 'sidebar__nav' });
+      NAV.forEach(([title, items]) => {
+        nav.append(el('div', { class: 'sidebar__section', text: title }));
+        items.forEach(([label, ico, active]) => {
+          const link = el('a', { class: 'sidebar__link', href: '#', 'aria-current': active ? 'page' : null });
+          link.append(icon(ico, { size: 17 }), el('span', { text: label }));
+          nav.append(link);
+        });
+      });
+
+      const brand = el('a', { class: 'sidebar__brand', href: '#' });
+      brand.append(el('span', { class: 'sidebar__mark' }, [icon('truck', { size: 16 })]), el('span', { class: 'sidebar__title', text: 'ALI trade' }));
+
+      const logout = el('button', { class: 'sidebar__logout', type: 'button' });
+      logout.append(icon('logout', { size: 15 }), el('span', { text: 'Выйти' }));
+
+      document.querySelector('#app-sidebar').replaceChildren(
+        brand,
+        nav,
+        el('div', { class: 'sidebar__footer' }, [
+          el('div', { class: 'sidebar__user' }, [
+            el('span', { class: 'sidebar__user-name', text: 'Нурдан Исканов' }),
+            el('span', { class: 'sidebar__user-role', text: 'Администратор' }),
+          ]),
+          logout,
+        ])
+      );
+
+      const menuButton = el('button', { class: 'topbar__menu', type: 'button', 'aria-expanded': 'false' });
+      menuButton.append(el('span', { class: 'burger' }, [el('span'), el('span')]));
+      const input = el('input', { type: 'search', placeholder: 'Поиск по номеру машины' });
+      const searchField = el('div', { class: 'search-field' }, [icon('search', { size: 15 }), input]);
+      document.querySelector('#app-header').replaceChildren(
+        menuButton,
+        el('form', { class: 'topbar__search' }, [searchField, el('button', { class: 'btn', type: 'button', text: 'Найти' })]),
+        el('span', { class: 'topbar__hint', text: 'Поиск находит все рейсы машины, включая завершённые' })
+      );
+
+      const STATS = [
+        ['В пути', '18', 'stat--primary', 'сейчас на маршруте'],
+        ['Просрочено', '4', 'stat--danger', 'требуют внимания'],
+        ['С расходами', '9', 'stat--warning', 'за последние сутки'],
+        ['Прибыли вовремя', '37', 'stat--success', 'за неделю'],
+      ];
+      document.querySelector('#stats').replaceChildren(
+        ...STATS.map(([label, value, mod, hint]) =>
+          el('div', { class: `stat ${mod}` }, [
+            el('span', { class: 'stat__label', text: label }),
+            el('span', { class: 'stat__value', text: value }),
+            el('span', { class: 'stat__hint', text: hint }),
+          ])
+        )
+      );
+
+      hydrateIcons(document);
+      revealIn(document);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+# Боевой режим: HTTP только для редиректа и ACME, приложение — на TLS.
+# Подставляется ${DOMAIN}; сертификат должен уже лежать в ./certbot/conf.
+upstream api_backend {
+    server api:8000;
+}
+
+limit_req_zone $binary_remote_addr zone=api_limit:10m rate=20r/s;
+limit_req_zone $binary_remote_addr zone=login_limit:10m rate=5r/m;
+
+server {
+    listen 80 default_server;
+    server_name ${DOMAIN} www.${DOMAIN};
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+        default_type "text/plain";
+        access_log off;
+    }
+
+    location / {
+        return 301 https://${DOMAIN}$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl default_server;
+    http2 on;
+    server_name ${DOMAIN} www.${DOMAIN};
+
+    ssl_certificate     /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    include /etc/nginx/app_locations.conf;
+}

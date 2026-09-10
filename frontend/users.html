@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Сотрудники — ALI trade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/config.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="app-sidebar">
+        <a class="sidebar__brand" href="dashboard.html">
+          <span class="sidebar__mark" id="app-logo" data-icon="truck" data-icon-size="16"></span>
+          <span class="sidebar__title" id="app-name">ALI trade</span>
+        </a>
+
+        <nav class="sidebar__nav" aria-label="Основная навигация">
+          <div class="sidebar__section">Работа</div>
+          <a class="sidebar__link" href="dashboard.html" data-icon="dashboard" data-icon-size="17"><span>Панель</span></a>
+          <a class="sidebar__link" href="deliveries.html" data-icon="truck" data-icon-size="17"><span>Рейсы</span></a>
+          <a class="sidebar__link" href="expenses.html" data-icon="receipt" data-icon-size="17"><span>Расходы</span></a>
+          <a class="sidebar__link" href="rates.html" data-icon="coins" data-icon-size="17"><span>Курсы валют</span></a>
+          <div class="sidebar__admin">
+            <div class="sidebar__section">Администрирование</div>
+            <a class="sidebar__link" href="reports.html" data-icon="chart" data-icon-size="17"><span>Отчёты</span></a>
+            <a class="sidebar__link" href="points.html" data-icon="pin" data-icon-size="17"><span>Точки</span></a>
+            <a class="sidebar__link" href="users.html" data-icon="users" data-icon-size="17" aria-current="page"><span>Сотрудники</span></a>
+            <a class="sidebar__link" href="settings.html" data-icon="sliders" data-icon-size="17"><span>Справочники</span></a>
+            <a class="sidebar__link" href="audit.html" data-icon="history" data-icon-size="17"><span>Журнал действий</span></a>
+          </div>
+        </nav>
+
+        <div class="sidebar__footer">
+          <div class="sidebar__user">
+            <span class="sidebar__user-name" id="sidebar-user-name"></span>
+            <span class="sidebar__user-role" id="sidebar-user-role"></span>
+          </div>
+          <button class="sidebar__logout" type="button" id="sidebar-logout" data-icon="logout" data-icon-size="15">
+            <span>Выйти</span>
+          </button>
+        </div>
+      </aside>
+
+      <div class="app-body">
+        <header class="topbar" id="app-header"></header>
+
+        <main class="app-main">
+      <div class="page-header">
+        <div>
+          <h1>Сотрудники</h1>
+        </div>
+        <button class="btn btn--primary btn--cta-add" type="button" id="btn-new"><span>Добавить сотрудника</span></button>
+      </div>
+
+      <section class="card">
+        <div class="card__title">
+          <h2>Учётные записи</h2>
+          <form id="search-form" class="inline-search">
+            <label class="visually-hidden" for="u-search">Поиск сотрудника</label>
+            <input id="u-search" name="search" type="search" placeholder="Имя или логин" />
+            <button class="btn" type="submit">Найти</button>
+          </form>
+        </div>
+        <div id="users"></div>
+      </section>
+        </main>
+      </div>
+    </div>
+
+    <div class="modal" id="user-modal" role="dialog" aria-modal="true" aria-labelledby="user-modal-title" hidden>
+      <div class="modal__dialog">
+        <div class="modal__header">
+          <h2 id="user-modal-title">Новый сотрудник</h2>
+          <button class="btn btn--sm btn--icon" type="button" data-close aria-label="Закрыть" data-icon="close"></button>
+        </div>
+        <form id="user-form" novalidate>
+          <input type="hidden" name="id" />
+          <div class="form-grid form-grid--2">
+            <div class="field">
+              <label class="field__label" for="u-name">ФИО *</label>
+              <input id="u-name" name="full_name" type="text" required />
+            </div>
+            <div class="field">
+              <label class="field__label" for="u-login">Логин *</label>
+              <input id="u-login" name="login" type="text" required autocomplete="off" />
+              <span class="field__hint">Латиница, цифры, точка, дефис — от 3 символов</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="u-phone">Телефон</label>
+              <input id="u-phone" name="phone" type="tel" />
+            </div>
+            <div class="field">
+              <label class="field__label" for="u-role">Роль *</label>
+              <select id="u-role" name="role">
+                <option value="EMPLOYEE">Сотрудник</option>
+                <option value="ADMIN">Администратор</option>
+              </select>
+            </div>
+            <div class="field field--span-2">
+              <label class="field__label" for="u-password">Пароль</label>
+              <input id="u-password" name="password" type="password" autocomplete="new-password" minlength="6" />
+              <span class="field__hint" id="password-hint">Не менее 6 символов</span>
+            </div>
+            <div class="field field--span-2">
+              <label class="checkbox">
+                <input id="u-active" name="is_active" type="checkbox" checked />
+                Учётная запись активна
+              </label>
+            </div>
+          </div>
+          <div class="modal__footer">
+            <button class="btn" type="button" data-close>Отмена</button>
+            <button class="btn btn--primary" type="submit" id="user-submit">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script type="module" src="js/pages/users.js"></script>
+  </body>
+</html>

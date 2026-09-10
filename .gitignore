@@ -1,0 +1,149 @@
+# ============================================================================
+#  Django + vanilla JS + Docker
+#  Правило: в репозитории только исходники. Всё, что генерируется, скачивается
+#  или содержит секреты, — игнорируется.
+# ============================================================================
+
+# ---------- Секреты и локальные настройки ----------
+.env
+.env.*
+!.env.example
+!.env.production.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+certbot/                    # сертификаты Let's Encrypt с боевого сервера
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+sdist/
+wheels/
+*.egg-info/
+*.egg
+.installed.cfg
+MANIFEST
+
+# Виртуальные окружения
+.venv/
+venv/
+env/
+ENV/
+virtualenv/
+pyvenv.cfg
+
+# Инструменты и кеши
+.mypy_cache/
+.dmypy.json
+.pytype/
+.pyre/
+.ruff_cache/
+.pytest_cache/
+.tox/
+.nox/
+.hypothesis/
+.ipynb_checkpoints/
+cython_debug/
+
+# Покрытие тестами
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+nosetests.xml
+.cache
+
+# ---------- Django ----------
+*.sqlite3
+*.sqlite3-journal
+db.sqlite3
+staticfiles/                # результат collectstatic
+mediafiles/
+media/                      # загрузки пользователей
+local_settings.py
+*.mo                        # скомпилированные переводы (.po — храним)
+
+# ---------- Node / фронтенд-тулинг ----------
+node_modules/
+jspm_packages/
+.npm
+.yarn/cache
+.yarn/install-state.gz
+.pnp.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.parcel-cache/
+.vite/
+.cache/
+
+# ---------- Docker ----------
+docker-compose.override.yml
+docker-compose.*.local.yml
+.docker/
+
+# ---------- Логи, дампы, бэкапы ----------
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+*.bak
+*.backup
+*.orig
+*.rej
+*.tmp
+*.temp
+*.dump
+*.sql.gz
+backup*/
+backups/
+
+# ---------- IDE и редакторы ----------
+.idea/
+.vscode/
+!.vscode/extensions.json    # рекомендации по расширениям полезно шарить
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+.fleet/
+.zed/
+
+# ---------- Операционная система ----------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+# Linux
+.fuse_hidden*
+.Trash-*
+.nfs*
+
+# ---------- AI-ассистенты ----------
+.claude/settings.local.json
+.aider*
+.cursorignore

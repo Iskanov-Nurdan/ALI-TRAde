@@ -1,0 +1,22 @@
+# Режим без TLS: работает сразу после запуска и отдаёт ACME-проверку,
+# по которой certbot выпускает сертификат. Подставляется ${DOMAIN}.
+upstream api_backend {
+    server api:8000;
+}
+
+limit_req_zone $binary_remote_addr zone=api_limit:10m rate=20r/s;
+limit_req_zone $binary_remote_addr zone=login_limit:10m rate=5r/m;
+
+server {
+    listen 80 default_server;
+    server_name ${DOMAIN} www.${DOMAIN};
+
+    # Проверка владения доменом для Let's Encrypt
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+        default_type "text/plain";
+        access_log off;
+    }
+
+    include /etc/nginx/app_locations.conf;
+}

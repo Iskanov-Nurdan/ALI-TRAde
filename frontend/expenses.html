@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Расходы — ALI trade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/config.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="app-sidebar">
+        <a class="sidebar__brand" href="dashboard.html">
+          <span class="sidebar__mark" id="app-logo" data-icon="truck" data-icon-size="16"></span>
+          <span class="sidebar__title" id="app-name">ALI trade</span>
+        </a>
+
+        <nav class="sidebar__nav" aria-label="Основная навигация">
+          <div class="sidebar__section">Работа</div>
+          <a class="sidebar__link" href="dashboard.html" data-icon="dashboard" data-icon-size="17"><span>Панель</span></a>
+          <a class="sidebar__link" href="deliveries.html" data-icon="truck" data-icon-size="17"><span>Рейсы</span></a>
+          <a class="sidebar__link" href="expenses.html" data-icon="receipt" data-icon-size="17" aria-current="page"><span>Расходы</span></a>
+          <a class="sidebar__link" href="rates.html" data-icon="coins" data-icon-size="17"><span>Курсы валют</span></a>
+          <div class="sidebar__admin">
+            <div class="sidebar__section">Администрирование</div>
+            <a class="sidebar__link" href="reports.html" data-icon="chart" data-icon-size="17"><span>Отчёты</span></a>
+            <a class="sidebar__link" href="points.html" data-icon="pin" data-icon-size="17"><span>Точки</span></a>
+            <a class="sidebar__link" href="users.html" data-icon="users" data-icon-size="17"><span>Сотрудники</span></a>
+            <a class="sidebar__link" href="settings.html" data-icon="sliders" data-icon-size="17"><span>Справочники</span></a>
+            <a class="sidebar__link" href="audit.html" data-icon="history" data-icon-size="17"><span>Журнал действий</span></a>
+          </div>
+        </nav>
+
+        <div class="sidebar__footer">
+          <div class="sidebar__user">
+            <span class="sidebar__user-name" id="sidebar-user-name"></span>
+            <span class="sidebar__user-role" id="sidebar-user-role"></span>
+          </div>
+          <button class="sidebar__logout" type="button" id="sidebar-logout" data-icon="logout" data-icon-size="15">
+            <span>Выйти</span>
+          </button>
+        </div>
+      </aside>
+
+      <div class="app-body">
+        <header class="topbar" id="app-header"></header>
+
+        <main class="app-main">
+      <div class="page-header">
+        <div>
+          <h1>Расходы</h1>
+        </div>
+        <button class="btn" type="button" id="btn-export" hidden data-icon="download"><span>Выгрузить в Excel</span></button>
+      </div>
+
+      <section class="card filters" aria-labelledby="filters-title">
+        <h2 id="filters-title" class="card__title">Фильтры</h2>
+        <form id="filters-form">
+          <div class="form-grid form-grid--4">
+            <div class="field">
+              <label class="field__label" for="f-vehicle">Номер машины</label>
+              <input id="f-vehicle" name="vehicle_number" type="search" placeholder="1234" />
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-date-from">Период с</label>
+              <input id="f-date-from" name="date_from" type="date" />
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-date-to">по</label>
+              <input id="f-date-to" name="date_to" type="date" />
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-type">Тип расхода</label>
+              <select id="f-type" name="expense_type"></select>
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-payer">Плательщик</label>
+              <select id="f-payer" name="payer"></select>
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-currency">Валюта</label>
+              <select id="f-currency" name="currency"></select>
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-author">Добавил</label>
+              <select id="f-author" name="created_by"></select>
+            </div>
+            <div class="field filters__actions">
+              <div class="btn-group">
+                <button class="btn btn--primary" type="submit">Применить</button>
+                <button class="btn" type="reset" id="btn-reset">Сбросить</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section class="card" aria-labelledby="list-title">
+        <div class="card__title">
+          <h2 id="list-title">Список расходов</h2>
+          <span id="totals" class="badge badge--warning"></span>
+        </div>
+        <div id="expenses"></div>
+        <div class="pagination" id="pagination" hidden>
+          <button class="btn btn--sm" type="button" id="page-prev">Назад</button>
+          <span id="page-info"></span>
+          <button class="btn btn--sm" type="button" id="page-next">Вперёд</button>
+        </div>
+      </section>
+        </main>
+      </div>
+    </div>
+
+    <script type="module" src="js/pages/expenses.js"></script>
+  </body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Вход — ALI trade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/config.js"></script>
+  </head>
+  <body class="login-page">
+    <main class="login-card">
+      <div class="login-card__brand">
+        <span class="login-card__mark" id="app-logo" data-icon="truck" data-icon-size="18"></span>
+        <span>
+          <span class="login-card__title" id="app-name">ALI trade</span>
+          <span class="login-card__subtitle">Рейсы, сроки прибытия и расходы</span>
+        </span>
+      </div>
+
+      <div id="login-alert" class="alert alert--error" role="alert" hidden></div>
+
+      <form id="login-form" novalidate>
+        <div class="form-grid">
+          <div class="field">
+            <label class="field__label" for="login">Логин</label>
+            <input id="login" name="login" type="text" autocomplete="username" required autofocus />
+          </div>
+          <div class="field">
+            <label class="field__label" for="password">Пароль</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required />
+          </div>
+          <button id="login-submit" class="btn btn--primary btn--block" type="submit">Войти</button>
+        </div>
+      </form>
+    </main>
+
+    <script type="module">
+      import { api, tokenStore } from './js/api.js';
+      import { applyBranding } from './js/branding.js';
+      import { hydrateIcons } from './js/icons.js';
+      import { createThemeToggle } from './js/theme.js';
+      import { qs } from './js/ui.js';
+
+      const form = qs('#login-form');
+      const alertBox = qs('#login-alert');
+      const submit = qs('#login-submit');
+
+      if (tokenStore.access) {
+        window.location.href = 'dashboard.html';
+      }
+
+      hydrateIcons(document);
+      applyBranding();
+      document.body.append(createThemeToggle('login-page__theme'));
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        alertBox.hidden = true;
+
+        const data = new FormData(form);
+        const login = String(data.get('login')).trim();
+        const password = String(data.get('password'));
+
+        if (!login || !password) {
+          alertBox.textContent = 'Заполните логин и пароль.';
+          alertBox.hidden = false;
+          return;
+        }
+
+        submit.disabled = true;
+        submit.textContent = 'Вход…';
+        try {
+          const result = await api.login(login, password);
+          tokenStore.save({ access: result.access, refresh: result.refresh, user: result.user });
+          window.location.href = 'dashboard.html';
+        } catch (error) {
+          alertBox.textContent =
+            error.status === 401
+              ? 'Неверный логин или пароль, либо учётная запись заблокирована.'
+              : error.message;
+          alertBox.hidden = false;
+        } finally {
+          submit.disabled = false;
+          submit.textContent = 'Войти';
+        }
+      });
+    </script>
+  </body>
+</html>
